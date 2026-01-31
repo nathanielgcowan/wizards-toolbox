@@ -1,23 +1,31 @@
 "use client";
 import React from "react";
+import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const [state, useState] = React.useState([]);
 
   function addItem() {
-    const nextItem = state.length;
-    useState([...state, nextItem]);
-    console.log("Item added:", nextItem);
+    useState([
+      ...state,
+      {
+        id: uuidv4(),
+        value: 0,
+      },
+    ]);
+    console.log("Item added:");
   }
-  function editItem() {
-    const newState = state.map((e, i) => (i === 0 ? e + 1 : e));
+  function editItem(e) {
+    console.log(e);
+    const newState = state.map((e, i) => (i === e ? e + 1 : e));
     useState(newState);
     console.log("Item edited");
   }
-  function deleteItem() {
-    const newState = state.slice(0, -1);
+  function deleteItem(e) {
+    // const newState = state.slice(0, -1);
+    const newState = state.filter((_, i) => i !== e);
     useState(newState);
-    console.log("Item removed");
+    console.log(e);
   }
   console.log(state);
   return (
@@ -28,8 +36,9 @@ export default function Home() {
         // a unique key is required here
         return (
           <>
-            <p key={i}>Item {e}</p>
-            <button onClick={deleteItem}>Delete Item</button>
+            <p key={e.id}>{e.value}</p>
+            <button onClick={() => editItem(i)}>Edit Item</button>
+            <button onClick={() => deleteItem(i)}>Delete Item</button>
           </>
         );
       })}
