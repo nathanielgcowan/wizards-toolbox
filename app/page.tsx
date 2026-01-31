@@ -1,7 +1,12 @@
+"use client";
+import React from "react";
+
 export default function Home() {
+  const [state, useState] = React.useState([0]);
+  console.log(state);
   return (
-    <div>
-      <h1>Welcome to the Next.js Toturial</h1>
-    </div>
+    <>
+      <h1>Welcld a Next Js app.</h1>
+    </>
   );
 }
