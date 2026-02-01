@@ -3,12 +3,35 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
-  const [state, useState] = React.useState([]);
+  const [state, useState] = React.useState(() => {
+    const saved = window.localStorage.getItem("myAppData");
+    if (saved) {
+      return JSON.parse(saved);
+    } else {
+      return [];
+    }
+  });
   const [newItem, useNewItem] = React.useState({
     id: "",
     checked: false,
     value: 0,
   });
+
+  React.useEffect(() => { 
+    useNewItem({
+      id: "",
+      checked: false,
+      value: Math.floor(Math.random() * 100) + 1,
+    });
+  }, [state]);
+
+  React.useEffect(() => {
+    try {
+      window.localStorage.setItem("myAppData", JSON.stringify(state));
+    } catch (e) {
+      console.error("Failed to save to localStorage:", e);
+    }
+  }, [state]);
 
   function addItem() {
     useState([...state, { ...newItem, id: uuidv4() }]);
@@ -33,7 +56,7 @@ export default function Home() {
         // a unique key is required here
         return (
           <p key={e.id}>
-            <p>{e.value}</p>
+            <>{e.value}</>
             <input
               type="checkbox"
               checked={e.checked}
