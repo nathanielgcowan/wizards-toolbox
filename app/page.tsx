@@ -15,9 +15,10 @@ export default function Home() {
     console.log("Item added:");
   }
   function editItem(e) {
-    const newState = state.map((e, i) => (i === e ? e + 1 : e));
+    const newState = state.map((item) =>
+      item.id === e.id ? { ...item, checked: !item.checked } : item,
+    );
     useState(newState);
-    console.log(e);
   }
   function deleteItem(id) {
     const newState = state.filter((e) => e.id !== id);
@@ -38,7 +39,6 @@ export default function Home() {
               checked={e.checked}
               onChange={() => editItem(e)}
             />
-            <button onClick={() => editItem(e)}>Edit Item</button>
             <button onClick={() => deleteItem(e.id)}>Delete Item</button>
           </p>
         );
