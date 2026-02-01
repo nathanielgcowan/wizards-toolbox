@@ -4,23 +4,26 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const [state, useState] = React.useState([]);
-  const [newItem, useNewItem] = React.useState({ id: "", value: 0 });
+  const [newItem, useNewItem] = React.useState({
+    id: "",
+    checked: false,
+    value: 0,
+  });
 
   function addItem() {
     useState([...state, { ...newItem, id: uuidv4() }]);
     console.log("Item added:");
   }
   function editItem(e) {
-    console.log(e);
     const newState = state.map((e, i) => (i === e ? e + 1 : e));
     useState(newState);
-    console.log("Item edited");
+    console.log(e);
   }
   function deleteItem(id) {
     const newState = state.filter((e) => e.id !== id);
     useState(newState);
   }
-  console.log(state);
+  // console.log(state);
   return (
     <>
       <h1>Welcome to a Next Js app.</h1>
@@ -28,11 +31,16 @@ export default function Home() {
       {state.map((e, i) => {
         // a unique key is required here
         return (
-          <>
-            <p key={e.id}>{e.value}</p>
+          <p key={e.id}>
+            <p>{e.value}</p>
+            <input
+              type="checkbox"
+              checked={e.checked}
+              onChange={() => editItem(e)}
+            />
             <button onClick={() => editItem(e)}>Edit Item</button>
             <button onClick={() => deleteItem(e.id)}>Delete Item</button>
-          </>
+          </p>
         );
       })}
     </>
