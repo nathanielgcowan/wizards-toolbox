@@ -4,15 +4,10 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
   const [state, useState] = React.useState([]);
+  const [newItem, useNewItem] = React.useState({ id: "", value: 0 });
 
   function addItem() {
-    useState([
-      ...state,
-      {
-        id: uuidv4(),
-        value: 0,
-      },
-    ]);
+    useState([...state, { ...newItem, id: uuidv4() }]);
     console.log("Item added:");
   }
   function editItem(e) {
@@ -21,11 +16,9 @@ export default function Home() {
     useState(newState);
     console.log("Item edited");
   }
-  function deleteItem(e) {
-    // const newState = state.slice(0, -1);
-    const newState = state.filter((_, i) => i !== e);
+  function deleteItem(id) {
+    const newState = state.filter((e) => e.id !== id);
     useState(newState);
-    console.log(e);
   }
   console.log(state);
   return (
@@ -37,8 +30,8 @@ export default function Home() {
         return (
           <>
             <p key={e.id}>{e.value}</p>
-            <button onClick={() => editItem(i)}>Edit Item</button>
-            <button onClick={() => deleteItem(i)}>Delete Item</button>
+            <button onClick={() => editItem(e)}>Edit Item</button>
+            <button onClick={() => deleteItem(e.id)}>Delete Item</button>
           </>
         );
       })}
