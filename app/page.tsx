@@ -3,6 +3,8 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 
 export default function Home() {
+  const [data, setData] = React.useState(null);
+  const [isLoading, setLoading] = React.useState(true);
   const [state, useState] = React.useState(() => {
     const saved = window.localStorage.getItem("myAppData");
     if (saved) {
@@ -17,14 +19,17 @@ export default function Home() {
     value: 0,
   });
 
-  React.useEffect(() => { 
-    useNewItem({
-      id: "",
-      checked: false,
-      value: Math.floor(Math.random() * 100) + 1,
-    });
-  }, [state]);
-
+  React.useEffect(() => {
+    fetch("https://pokeapi.co/api/v2/pokemon")
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data.results);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
   React.useEffect(() => {
     try {
       window.localStorage.setItem("myAppData", JSON.stringify(state));
@@ -50,6 +55,10 @@ export default function Home() {
   // console.log(state);
   return (
     <>
+      {isLoading ? <p>Loading...</p> : <p>Data loaded.</p>}
+      {data.map((e) => (
+        <p key={e.name}>{e.name}</p>
+      ))}
       <h1>Welcome to a Next Js app.</h1>
       <button onClick={addItem}>Add Item</button>
       {state.map((e, i) => {
