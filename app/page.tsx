@@ -65,9 +65,30 @@ export default function Home() {
         console.error("Error fetching saved Pokemon:", error);
       });
   }
+  function capturePokemon(pokemon) {
+    console.log("Capturing Pokemon:", pokemon);
+    fetch("http://localhost:3001/pokemons", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pokemon),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Pokemon captured:", data);
+        getPokemon();
+      })
+      .catch((error) => {
+        console.error("Error capturing Pokemon:", error);
+      });
+  }
   // console.log(data);
   return (
     <>
+      <h2>
+        <strong>The Wild</strong>
+      </h2>
       {isLoading ? (
         <p>Loading...</p>
       ) : (
@@ -75,7 +96,7 @@ export default function Home() {
           <p key={e.name}>
             {e.name}
             {""}
-            <button onClick={getPokemon}>Save</button>
+            <button onClick={() => capturePokemon(e)}>Capture</button>
           </p>
         ))
       )}
@@ -96,9 +117,17 @@ export default function Home() {
         );
       })}
 
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <button onClick={getPokemon}>
+          <h2>
+            <strong>Caught Pokemon:</strong>
+          </h2>
+        </button>
+      )}
       {rubyList.length > 0 && (
         <div>
-          <h2>Saved Pokemon:</h2>
           {rubyList.map((pokemon) => (
             <p key={pokemon.id}>{pokemon.name}</p>
           ))}
